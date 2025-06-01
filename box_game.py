@@ -16,7 +16,7 @@ clock = pygame.time.Clock()
 
 # Colors
 BLACK = (0, 0, 0)
-FLASH_COLOR = (255, 50, 50)
+FLASH_COLOR = (255, 255, 255)
 
 # Load assets
 def load_image(name):
@@ -30,8 +30,8 @@ class Box:
         self.y = y
         self.name = name
         self.health = 10
-        self.speed_x = random.choice([3, 5, 7])
-        self.speed_y = random.choice([3, 5, 7])
+        self.speed_x = random.choice([5, 7])
+        self.speed_y = random.choice([5, 7])
         self.image = pygame.image.load(image_path).convert_alpha()
         self.width = self.image.get_width()
         self.height = self.image.get_height()
@@ -57,16 +57,16 @@ class Box:
 
     def take_damage(self):
         self.health -= 1
-        scale = max(0.4, 1 - 0.05 * (10 - self.health))  # kecilkan jika damage
-        new_w = int(self.image.get_width() * scale)
-        new_h = int(self.image.get_height() * scale)
+        scale = max(0.5, 1 - 0.05 * (10 - self.health))
+        new_w = int(self.image.get_width() - scale) 
+        new_h = int(self.image.get_height() - scale) 
         self.image = pygame.transform.scale(self.image, (new_w, new_h))
         self.width = new_w
         self.height = new_h
 
 # Create boxes
 box_A = Box(1, 0, 'image/A.png', "A")
-box_B = Box(400, 550, 'image/B.png', "B")
+box_B = Box(400, 500, 'image/B.png', "B")
 
 # Collision timer
 collision_cooldown = 500  # ms
@@ -101,6 +101,7 @@ while isRunning:
             box_A.speed_x *= -1
             box_B.speed_x *= -1
             box_A.x += box_A.speed_x * 2
+            FLASH_COLOR = (0, 0, 255)
         
         # Horizontal collision
         else:
@@ -108,6 +109,7 @@ while isRunning:
             box_A.speed_y *= -1
             box_B.speed_y *= -1
             box_A.y += box_A.speed_y * 2
+            FLASH_COLOR = (255, 0, 0)
 
         last_collision_time = current_time
         flash_timer = 5  # show flash effect for short time
